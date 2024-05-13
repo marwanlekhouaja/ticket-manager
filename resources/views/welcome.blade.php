@@ -5,7 +5,6 @@
     <form action="/ticket/create" class="d-flex justify-content-center flex-column align-items-center">
         {{-- @method('GET') --}}
         <h2 style="font-family: monospace">Bienvenue cher client sur TicketManager !</h2>
-       
         <div class="d-flex align-items-center">
             <select class="form-select" name="language">
                 <option value="">choisir votre langue prefere</option>

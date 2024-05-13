@@ -28,5 +28,4 @@ Route::middleware('auth')->group(function () {
 });
 Route::resource('ticket',TicketController::class);
 
-Route::get('/ticket/create/?language=',[TicketController::class,'create'])->name('ticket.take');
 require __DIR__.'/auth.php';

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 use Stevebauman\Location\Facades\Location;
-
+use Torann\GeoIP\Facades\GeoIP;
 use App\Models\Historique;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TicketController extends Controller
 {
@@ -14,6 +15,7 @@ class TicketController extends Controller
      */
     public function __construct(){
         $this->middleware(['auth','verified'])->only('index');
+        // $this->middleware('applanguage')->only(['index','create','store']);
     }
     public function index()
     {
@@ -27,19 +29,14 @@ class TicketController extends Controller
      */
     public function create(Request $request)
     {
-        // dd($request->ip());
+        // $ip = $request->input('ip');
 
-// if ($position = Location::get()) {
-//     // Successfully retrieved position.
-//     dd($position->countryName);
-// } else {
-//     // Failed retrieving position.
-// }
-        // $ip = $request->ip(); // Get IP address from request
-        // // $city = $this->getCityFromIP($ip);
-        // // dd($city);
-        // $position = Location::get($request->ip());
-        // dd($position);
+        // if (!$ip) {
+        //     $ip = $request->ip(); // fallback to server IP if X-Forwarded-For header is not present
+        // }
+    
+        // return $ip;
+
         $request->validate(['language' => 'required']);
         $latestTicket = Ticket::latest()->first();
         if($latestTicket){
@@ -49,7 +46,7 @@ class TicketController extends Controller
             return view('ticket.take',['language'=>$request->language,'latestTicket'=>1]);
         }
     }
-
+   
     /**
      * Store a newly created resource in storage.
      */
@@ -64,13 +61,13 @@ class TicketController extends Controller
         if($latestTicket){
             if ($language) {
 
-                return redirect('/ticket/create?language=' . $language)->with('success', 'Votre nombre de ticket est ' .  $latestTicket->ticket_number.' (la date de creation : '.$latestTicket->created_at.' )');
+                return redirect('/ticket/create?language=' . $language)->with('success', 'Votre nombre de ticket est ' .  $latestTicket->ticket_number.' la date de creation : '.$latestTicket->created_at.' ; agence :redal ; ville : rabat)');
             } 
         }    
         else{
             if ($language) {
 
-                return redirect('/ticket/create?language=' . $language)->with('success', 'Votre nombre de ticket est ' .'1'.' (la date de creation : '.now().' )');
+                return redirect('/ticket/create?language=' . $language)->with('success', '(Votre nombre de ticket est ' .'1'.' (la date de creation : '.now().' ; agence : redal ; ville : rabat)');
             }
         }  
     }
