@@ -8,6 +8,8 @@
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
         <title>dashboard charge clientele</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

@@ -52,7 +52,7 @@ class TicketController extends Controller
         $latestTicket = Ticket::latest()->first();
 
         if($latestTicket){
-            return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '.$latestTicket->ticket_number,'enabled'=>true]);
+            return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '.$latestTicket->ticket_number." (votre demande est dans la liste d'attente)"]);
         }
         else{
             return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '..1,'enabled'=>true]);
