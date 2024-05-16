@@ -1,12 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use Stevebauman\Location\Facades\Location;
-use Torann\GeoIP\Facades\GeoIP;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Historique;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class TicketController extends Controller
 {
@@ -23,27 +21,22 @@ class TicketController extends Controller
         return view('dashboard', compact('tickets'));
     }
 
-    
     /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
     {
-        // $ip = $request->input('ip');
+        
 
-        // if (!$ip) {
-        //     $ip = $request->ip(); // fallback to server IP if X-Forwarded-For header is not present
-        // }
-    
-        // return $ip;
+        // $request->validate(['language' => 'required']);
 
-        $request->validate(['language' => 'required']);
         $latestTicket = Ticket::latest()->first();
+
         if($latestTicket){
-            return view('ticket.take',['language'=>$request->language,'latestTicket'=>$latestTicket->ticket_number+1]);
+            return view('ticket.take',['latestTicket'=>$latestTicket->ticket_number+1]);
         }
         else{
-            return view('ticket.take',['language'=>$request->language,'latestTicket'=>1]);
+            return view('ticket.take',['latestTicket'=>1]);
         }
     }
    
@@ -55,21 +48,16 @@ class TicketController extends Controller
         Ticket::create([
             'isValid' => false
         ]);
-
+        
         $latestTicket = Ticket::latest()->first();
-        $language = $request->input('language');
+
         if($latestTicket){
-            if ($language) {
-
-                return redirect('/ticket/create?language=' . $language)->with('success', 'Votre nombre de ticket est ' .  $latestTicket->ticket_number.' la date de creation : '.$latestTicket->created_at.' ; agence :redal ; ville : rabat)');
-            } 
-        }    
+            return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '.$latestTicket->ticket_number,'enabled'=>true]);
+        }
         else{
-            if ($language) {
-
-                return redirect('/ticket/create?language=' . $language)->with('success', '(Votre nombre de ticket est ' .'1'.' (la date de creation : '.now().' ; agence : redal ; ville : rabat)');
-            }
-        }  
+            return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '..1,'enabled'=>true]);
+        }
+        
     }
 
     /**
@@ -77,7 +65,17 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        $latestTicket = Ticket::latest()->first();
+
+        $data=[
+            'title'=>'ticket',
+            'ticket_number'=>$latestTicket->ticket_number,
+            'date_creation'=>date('m/d/Y'),
+            'agence'=>'redal rabat',
+        ];
+  
+        $pdf = Pdf::loadView('ticket.ticket-pdf', $data);
+        return $pdf->download('ticket.pdf');
     }
 
     /**

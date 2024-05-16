@@ -2,8 +2,12 @@
 @section('title','prend ticket')
 @section('content')
     @if (session()->has('success'))
-        <div class="alert alert-success mt-3 shadow container">{{session('success')}}</div>        
+        <div class="alert alert-success mt-3 shadow container d-flex align-items-center justify-content-between">
+          <div>{{session('success')}}</div>   
+          <a href="{{route('ticket.show',$latestTicket-1)}}" class="btn btn-success">imprimer ticket</a> 
+        </div>     
     @endif
+    
     <div style="height: 90dvh" class="d-flex justify-content-center align-items-center flex-column">
       @if ($latestTicket)
          <h2 style="font-family: monospace">Tu as dans la position {{$latestTicket}} Souhaitez-vous prendre un ticket ?</h2>
@@ -12,7 +16,7 @@
         <div class="d-flex align-items-center">
             <form action="{{route('ticket.store')}}" method="POST">
                 @csrf
-                <input type="hidden" name="language" value="{{$language}}">
+                {{-- <input type="hidden" name="language" value="{{$language}}"> --}}
                 <input type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" value="oui">
             </form>
             <form action="/" method="POST">

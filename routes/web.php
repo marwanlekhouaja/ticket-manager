@@ -28,4 +28,5 @@ Route::middleware('auth')->group(function () {
 });
 Route::resource('ticket',TicketController::class);
 
+
 require __DIR__.'/auth.php';
