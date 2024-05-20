@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::resource('ticket',TicketController::class);
+Route::post('/change-language', [App\Http\Controllers\LanguageController::class, 'changeLanguage'])->name('change_language');
 
 
 require __DIR__.'/auth.php';

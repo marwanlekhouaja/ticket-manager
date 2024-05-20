@@ -11,7 +11,7 @@
             <h2 style="font-family: monospace">Votre numero de ticket : {{$ticket_number}}</h2>
             <h2 style="font-family: monospace">La date de creation : {{$date_creation}}</h2>
             <h2 style="font-family: monospace">Agence : {{$agence}}</h2>
-            <h2 style="font-family: monospace">Ville : Rabat</h2>
+            <h2 style="font-family: monospace">Ville : {{$ville}}</h2>
         </div>
     </div>
 @endsection

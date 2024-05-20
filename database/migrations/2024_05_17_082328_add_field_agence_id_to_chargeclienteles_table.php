@@ -9,22 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    
     public function up(): void
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->unsignedBigInteger('agenceId');
-            $table->foreign('agenceId')->references('id')->on('agences');
+        Schema::table('chargeclienteles', function (Blueprint $table) {
+            $table->unsignedBigInteger('agence_id')->nullable();
+            $table->foreign('agence_id')->references('id')->on('agences')->nullOnDelete();
         });
     }
 
     /**
      * Reverse the migrations.
      */
-
     public function down(): void
     {
-        Schema::table('tickets', function (Blueprint $table) {
+        Schema::table('chargeclieteles', function (Blueprint $table) {
             //
         });
     }

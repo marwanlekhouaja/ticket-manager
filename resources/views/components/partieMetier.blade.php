@@ -7,7 +7,7 @@
             </h2>
             <a class="text-white mt-3 text-decoration-none text-start" href="https://www.redal.ma/fr/votre-agence-ligne/client-particulier/vos-services-digitaux/sms-facture">En savoir plus sur le service SMS Facture click ici </a>
         </div>
-        <iframe class="w-50" height="350" src="https://www.youtube.com/embed/xTS7wO3OglI" frameborder="0" allowfullscreen></iframe>
+        <iframe class="w-50" height="315" src="https://www.youtube.com/embed/xTS7wO3OglI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
        
     </div>
 </div> 

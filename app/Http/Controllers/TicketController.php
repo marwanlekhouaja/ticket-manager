@@ -1,79 +1,108 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Agence;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Historique;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function __construct(){
-        $this->middleware(['auth','verified'])->only('index');
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified'])->only('index');
         // $this->middleware('applanguage')->only(['index','create','store']);
     }
     public function index()
     {
-        $tickets = Ticket::paginate(7);
+        $tickets = Ticket::with('agence')->where([['agenceId',Auth::user()->agenceId],['isValid',false]])->paginate(7);
+        // dd(Auth::user()->agenceId);
         return view('dashboard', compact('tickets'));
+        if(strlen($tickets)){
+            return view('dashboard', compact('tickets')); 
+        }
+        else{
+            return view('dashboard') ;
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
-    {
-        
+{
+    $agence = Agence::where('adress', $request->address.','.$request->city)
+                    ->where('ville', $request->city)
+                    ->first();
+    $defaultAgence= Agence::find(2)->first();               
 
-        // $request->validate(['language' => 'required']);
+    $latestTicket = Ticket::with('agence')->latest()->first();
 
-        $latestTicket = Ticket::latest()->first();
 
-        if($latestTicket){
-            return view('ticket.take',['latestTicket'=>$latestTicket->ticket_number+1]);
-        }
-        else{
-            return view('ticket.take',['latestTicket'=>1]);
-        }
+    if ($latestTicket) {
+        $latestTicketNumber = $latestTicket->ticket_number+1;
+    } else {
+        $latestTicketNumber = 1; // Set to 0 if no tickets exist
     }
-   
+
+    // dd($request->all());
+
+    return view('ticket.take', [
+        'latestTicket' => $latestTicketNumber ,
+        'address' => $agence ? $agence->adress : $defaultAgence->adress,
+        'city' => $agence ? $agence->ville : $defaultAgence->ville,
+        'agence'=>$agence?$agence->nom:$defaultAgence->nom
+    ]);
+}
+
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        Ticket::create([
-            'isValid' => false
-        ]);
-        
-        $latestTicket = Ticket::latest()->first();
+        $agence = Agence::where('adress', $request->address.','.$request->city)
+        ->where('ville', $request->city)
+        ->first();
 
-        if($latestTicket){
-            return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '.$latestTicket->ticket_number." (votre demande est dans la liste d'attente)"]);
+        $agenceId = $agence ? $agence->id : 2; 
+
+        Ticket::create([
+            'isValid' => false,
+            'agence_id' => $agenceId,
+        ]);
+
+        $latestTicket = Ticket::with('agence')->latest()->first();
+
+        if ($latestTicket) {
+            return to_route('ticket.create')->with(['success' => 'votre numero de ticket est ' . $latestTicket->ticket_number . " (votre demande est dans la liste d'attente)"]);
+        } else {
+            return to_route('ticket.create')->with(['success' => 'votre numero de ticket est ' . .1, 'enabled' => true]);
         }
-        else{
-            return to_route('ticket.create')->with(['success'=>'votre numero de ticket est '..1,'enabled'=>true]);
-        }
-        
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Ticket $ticket,Request $request)
     {
         $latestTicket = Ticket::latest()->first();
 
-        $data=[
-            'title'=>'ticket',
-            'ticket_number'=>$latestTicket->ticket_number,
-            'date_creation'=>date('m/d/Y'),
-            'agence'=>'redal rabat',
+        $data = [
+            'title' => 'ticket',
+            'ticket_number' => $latestTicket->ticket_number,
+            'date_creation' => date('m/d/Y'),
+            'agence' => $request->agence,
+            'ville'=>$request->city
         ];
-  
+
         $pdf = Pdf::loadView('ticket.ticket-pdf', $data);
         return $pdf->download('ticket.pdf');
     }

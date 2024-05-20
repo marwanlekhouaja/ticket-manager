@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Agence extends Model
 {
     use HasFactory;
-    protected $timestamps=false;
+    public $timestamps=false;
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class,'agenceId','id') ;
+    }
 }

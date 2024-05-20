@@ -20,7 +20,7 @@
                           {{session('success')}}
                         </div>
                         @endif
-                        <table class="min w-full divide-y mt-2 text-center divide-gray-200">
+                        <table class="min w-full divide-y border-2 mt-2 text-center divide-gray-200">
                           <thead>
                             <tr>
                               <th scope="col" class="px-6 py-3  text-xs font-medium text-gray-500 uppercase">Ticket number</th>
@@ -30,24 +30,30 @@
                             </tr>
                           </thead>
                           <tbody class="divide-y divide-gray-200">
-                            @foreach ($tickets as $ticket)
-                                @if(!$ticket->isValid)
+                            @isset($tickets)
+                              @foreach ($tickets as $ticket)
+                                  @if(!$ticket->isValid)
+                                  <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{$ticket->ticket_number}}</td>
+                                    <td>
+                                      @if (!$ticket->isValid)
+                                        <span class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">non</span>                                    
+                                      @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{$ticket->created_at}}</td>
+                                    <td>
+                                      <a href="{{route('ticket.edit',$ticket->ticket_number)}}" style="border-radius: 1rem;background-color:rgb(121, 216, 121);padding:8px;color:white" >
+                                        validation
+                                      </a>
+                                    </td>
+                                  </tr>  
+                                  @endif                      
+                              @endforeach   
+                            @else
                                 <tr>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{$ticket->ticket_number}}</td>
-                                  <td>
-                                    @if (!$ticket->isValid)
-                                      <span class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">non</span>                                    
-                                    @endif
-                                  </td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{$ticket->created_at}}</td>
-                                  <td>
-                                    <a href="{{route('ticket.edit',$ticket->ticket_number)}}" style="border-radius: 1rem;background-color:rgb(121, 216, 121);padding:8px;color:white" >
-                                      validation
-                                    </a>
-                                  </td>
-                                </tr>  
-                                @endif                      
-                            @endforeach
+                                  <td colspan="7">no tickets exists !</td>
+                                </tr>                             
+                            @endisset
                 
                           </tbody>
                         </table>
