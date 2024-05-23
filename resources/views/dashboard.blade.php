@@ -4,7 +4,7 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot> --}}
-
+    
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -20,7 +20,7 @@
                           {{session('success')}}
                         </div>
                         @endif
-                        <table class="min w-full divide-y border-2 mt-2 text-center divide-gray-200">
+                        <table class="min w-full divide-y  mt-2 text-center divide-gray-200">
                           <thead>
                             <tr>
                               <th scope="col" class="px-6 py-3  text-xs font-medium text-gray-500 uppercase">Ticket number</th>
@@ -51,7 +51,7 @@
                               @endforeach   
                             @else
                                 <tr>
-                                  <td colspan="7">no tickets exists !</td>
+                                  <td colspan="7" class="mt-2">no tickets exists !</td>
                                 </tr>                             
                             @endisset
                 
@@ -60,7 +60,9 @@
                        
                       </div>
                       <div class="flex justify-center mt-4 mb-3 items-center">
-                        {{$tickets->links()}}
+                        @isset ($tickets)
+                           {{$tickets->links()}}                          
+                        @endisset
                       </div>
                     </div>
                   </div>

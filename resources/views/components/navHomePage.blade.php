@@ -6,16 +6,21 @@
             
         </div>
         <div class="d-flex align-items-center justify-content-around">
-            <a style="font-family: monospace" class=" me-2 text-dark text-decoration-none" href="https://www.redal.ma/fr/gestion-nos-ressources">gestion de nos ressources</a>
-            <a style="font-family: monospace" class="ms-3 text-dark text-decoration-none" href="https://www.redal.ma/fr/raison-detre">raison d'etre</a>
-            <form id="language-form" action="{{ route('change_language') }}" class="ms-3" method="post">
-                @csrf
-                <select name="language" class="form-select" onchange="changeLanguage(this)">
-                    <option value="fr">francais</option>
-                    <option value="ar" >arabe</option>
-                    <option value="en" >english</option>
-                </select>
-            </form>
+            <a style="font-family: monospace" class=" me-2 text-dark text-decoration-none" href="https://www.redal.ma/fr/gestion-nos-ressources">{{__("messages.gestion de nos ressources")}}</a>
+            <a style="font-family: monospace" class="ms-3 text-dark text-decoration-none" href="https://www.redal.ma/fr/raison-detre">{{__("messages.raison d'etre")}}</a>
+            {{-- <form id="language-form" action="{{ route('change_language') }}" class="ms-3" method="post"> --}}
+                {{-- @csrf --}}
+                {{-- <select name="language" class="form-select" > --}}
+                    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        {{-- <option> --}}
+                            <a rel="alternate" hreflang="{{ $localeCode }}" class="text-decoration-none text-dark m-2" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                {{ $properties['native'] }}
+                            </a>
+                        {{-- </option> --}}
+                     @endforeach
+                   
+                {{-- </select> --}}
+            {{-- </form> --}}
         </div>
         <div>
             <img style="width:220px" src="https://www.redal.ma/sites/g/files/dvc3366/files/opere-pare-veolia.png" alt="">

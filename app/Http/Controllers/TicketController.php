@@ -23,7 +23,7 @@ class TicketController extends Controller
     {
         $tickets = Ticket::with('agence')->where([['agenceId',Auth::user()->agenceId],['isValid',false]])->paginate(7);
         // dd(Auth::user()->agenceId);
-        return view('dashboard', compact('tickets'));
+        // return view('dashboard', compact('tickets'));
         if(strlen($tickets)){
             return view('dashboard', compact('tickets')); 
         }
